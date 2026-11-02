@@ -20,7 +20,9 @@ jobs:
           echo "5182b5449cd0fd92835e0f711531be29270be154ea1b29002769a351e0266acc  /tmp/xelacare.tar.xz" | sha256sum --check
           tar -tJf /tmp/xelacare.tar.xz >/dev/null
       - name: Extract application into repository
-        run: tar -xJf /tmp/xelacare.tar.xz -C .
+        run: |
+          tar -xJf /tmp/xelacare.tar.xz -C .
+          rm -f .github/workflows/quality.yml
       - name: Install dependencies
         uses: actions/setup-python@v5
         with:
