@@ -1,0 +1,28 @@
+# XelaCare staging backend deployment (synthetic data ONLY)
+# Use as the Render Blueprint definition after replacing the existing static-preview render.yaml.
+# This is a staging environment, NOT approved for PHI.
+services:
+  - type: web
+    name: xelacare-api-staging
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: xelacare-db-staging
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PYTHONUNBUFFERED
+        value: "1"
+databases:
+  - name: xelacare-db-staging
+    plan: basic-256mb
+    databaseName: xelacare
+    user: xelacare
+# The app currently uses SQLAlchemy create_all and lacks production RLS/MFA.
+# Never input real patient data. Check PostgreSQL driver URL compatibility.
